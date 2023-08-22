@@ -1,0 +1,3 @@
+"0","library(""CCA"")"
+"0","correl <- matcor(Weather, FWI_compo)"
+"0","img.matcor(correl, type = 2)"

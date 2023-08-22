@@ -1,0 +1,212 @@
+---
+title: "S17403 - Mini Project 02"
+author: "S17403"
+date: "2023-08-01"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import data set, EDA and data cleaning
+
+```{r}
+library(stats)
+
+library(readr)
+data <- read_csv("E:/Sumedha(important)/4th Year 1st Sem/Statistics/ST 405 - Multivariate methods II/project/Algerian_forest_fires_dataset_UPDATE.csv", 
+                 skip = 1)
+#View(data)
+problems()
+
+new_data <- data[-c(123, 124), ]
+
+#View(new_data)
+# Assuming your dataset is stored in 'data', check the structure
+str(new_data)
+head(new_data)
+
+# Check for missing values
+sum(is.na(new_data))
+
+# Remove rows with any missing values
+new_data<- na.omit(new_data)
+# Check for missing values
+sum(is.na(new_data))
+
+```
+
+**Convert char into numerical data**
+
+```{r}
+library(car)
+
+library(dplyr)
+new_data <- new_data %>%
+  mutate_at(vars(FFMC,DMC,DC,ISI,BUI,FWI), as.numeric)
+
+
+
+new_data <- new_data %>%
+  mutate_at(vars(Temperature, RH,Ws,Rain), as.numeric)
+
+# Check the class and structure of the data frame
+str(new_data)
+```
+
+```{r}
+library(ggplot2)
+ggplot(new_data, aes(x=Temperature, col=Classes)) + geom_density()
+```
+
+```{r}
+ggplot(new_data, aes(x=Ws, fill=Classes)) + geom_histogram() + facet_wrap(~Classes) + ggtitle("Fired or not with wind speed")
+
+
+```
+
+**Summary of the data set**
+
+```{r}
+summary(new_data)
+xtabs(~Classes, data = new_data)
+#str(new_data)
+
+
+```
+
+```{r}
+sd_data<-new_data[, c("Temperature", "RH","Ws","Rain","FFMC", "DMC","DC","ISI","BUI","FWI")]
+sd_data <-apply(sd_data,2,scale)
+
+```
+
+**Extract the two multivariate sets of variables**
+
+```{r}
+Weather <- new_data[, c("Temperature", "RH","Ws","Rain")]
+FWI_compo <- new_data[, c("FFMC", "DMC","DC","ISI","BUI","FWI")]
+
+```
+
+```{r}
+library(ggplot2)
+library(GGally)
+library(CCA)
+
+ggpairs(Weather)
+
+ggpairs(FWI_compo)
+
+```
+
+```{r}
+library("CCA")
+correl <- matcor(Weather, FWI_compo)
+img.matcor(correl, type = 2)
+```
+
+**Correlations**
+
+```{r}
+# correlations
+matcor(Weather, FWI_compo)
+```
+
+**Canonical correlation Analysis**
+
+```{r}
+
+#Canonical correlation
+cc1 <- cc(Weather, FWI_compo)
+
+# display the canonical correlations
+cc1$cor
+
+
+```
+
+**Canonical coefficients**
+
+```{r}
+# raw canonical coefficients
+cc1$xcoef
+
+```
+
+```{r}
+cc1$ycoef
+```
+
+***The raw canonical coefficients are interpreted in a manner analogous to interpreting regression coefficients i.e., for the variable FFMC, a one unit increase in FFMC leads to a 0.0464 decrease in the first canonical variate of set 2 when all of the other variables are held constant. FWI leads to a 0.002871 increase in the dimension 1 for the FWI_Compo set with the other predictors held constant.***
+
+***Next, we will use compute to compute the loadings of the variables on the canonical dimensions (variates). These loadings are correlations between variables and the canonical variates.***
+
+```{r}
+# compute canonical loadings
+cc2 <- comput(Weather,FWI_compo,cc1)
+
+# display canonical loadings
+cc2[3:6]
+```
+
+***The above correlations are between observed variables and canonical variables which are known as the canonical loadings. These canonical variates are actually a type of latent variable.***
+
+#### ***In general, the number of canonical dimensions is equal to the number of variables in the smaller set; however, the number of significant dimensions may be even smaller. Canonical dimensions, also known as canonical variates, are latent variables that are analogous to factors obtained in factor analysis.***
+
+***For this particular model there are four canonical dimensions of which only the first two are statistically significant. For statistical test we use R package \"CCP\".***
+
+**TESTS**
+
+```{r}
+library(CCP)
+# tests of canonical dimensions
+rho <- cc1$cor
+## Define number of observations, number of variables in first set, and number of variables in the second set.
+n <- dim(Weather)[1]
+p <- length(Weather)
+q <- length(FWI_compo)
+
+## Calculate p-values using the F-approximations of different test statistics:
+p.asym(rho, n, p, q, tstat = "Wilks")
+```
+
+**wilk lambda =0.2197308,F=18.452,d.f=24 : p\<0.0001.Here we reject the null hypothesis that there is no relationship between the two sets of variables,and can conclude that two sets of variables are dependent.**
+
+**same as second, third and fourth canonical variate pair is correlated(All the P values are lower than 0.001).Therefore All four canonical variate pairs are significantly correlated and dependent on one another.**
+
+```{r}
+p.asym(rho, n, p, q, tstat = "Hotelling")
+p.asym(rho, n, p, q, tstat = "Pillai")
+p.asym(rho, n, p, q, tstat = "Roy")
+
+```
+
+**Estimates of Canonical Correlation**
+
+```{r}
+# Get the squared canonical correlations
+squared_canonical_correlations <- cc1$cor^2
+
+# Print the squared canonical correlations
+print(squared_canonical_correlations)
+```
+
+70.54% of the variation in U1 is explained by the variation in V1 ,15.87% of the variation in U2 is explained by the variation in V2 and 9.68% of the variation in U3 is explained by the variation in V3 but only 1.80% of the variation in U4 is explained by V4.
+
+this first one is very high canonical correlation and implies that only first one canonical correlation is important.
+
+**Standardized canonical coefficients**
+
+```{r}
+# standardized psych canonical coefficients diagonal matrix of Weather sd's
+s1 <- diag(sqrt(diag(cov(Weather))))
+s1 %*% cc1$xcoef
+
+# standardized acad canonical coefficients diagonal matrix of acad FWI_Compo's
+s2 <- diag(sqrt(diag(cov(FWI_compo))))
+s2 %*% cc1$ycoef
+```
+
+**consider the variable FFMC , a one standard deviation increase in reading leads to a 0.66 standard deviation decrease in the score on the first canonical variate for set 2 when the other variables in the model are held constant.**

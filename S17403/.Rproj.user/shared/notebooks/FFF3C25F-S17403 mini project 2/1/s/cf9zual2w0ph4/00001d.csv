@@ -1,0 +1,3 @@
+"0","sd_data<-new_data[, c(""Temperature"", ""RH"",""Ws"",""Rain"",""FFMC"", ""DMC"",""DC"",""ISI"",""BUI"",""FWI"")]"
+"0","sd_data <-apply(sd_data,2,scale)"
+"0",""

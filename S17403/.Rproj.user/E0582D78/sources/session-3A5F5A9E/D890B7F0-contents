@@ -1,0 +1,100 @@
+library(stats)
+
+library(readr)
+data <- read_csv("E:/Sumedha(important)/4th Year 1st Sem/Statistics/ST 405 - Multivariate methods II/project/Algerian_forest_fires_dataset_UPDATE.csv", 
+                 skip = 1)
+View(data)
+problems()
+
+new_data <- data[-c(123, 124), ]
+
+View(new_data)
+# Assuming your dataset is stored in 'data', check the structure
+str(new_data)
+head(new_data)
+
+# Check for missing values
+sum(is.na(new_data))
+
+# Remove rows with any missing values
+new_data<- na.omit(new_data)
+# Check for missing values
+sum(is.na(new_data))
+
+# install.packages("car")
+library(car)
+
+library(dplyr)
+new_data <- new_data %>%
+  mutate_at(vars(FFMC,DMC,DC,ISI,BUI,FWI), as.numeric)
+
+# Check the class and structure of the data frame
+str(new_data)
+
+new_data <- new_data %>%
+  mutate_at(vars(Temperature, RH,Ws,Rain), as.numeric)
+
+
+
+# Assuming X and Y are two sets of variables in your dataset
+#x=weather, y=FWI
+
+vif_X <- vif(new_data[, c("Temperature", "RH","Ws","Rain")])  
+vif_Y <- vif(new_data[, c("FFMC", "DMC","DC","ISI","BUI","FWI")])
+
+vif_X
+
+
+
+
+
+# Assuming you have two datasets: "data1" and "data2"
+cor_matrix_data1 <- cor(new_data[, c("Temperature", "RH","Ws","Rain")])
+cor_matrix_data2 <- cor(new_data[, c("FFMC", "DMC","DC","ISI","BUI","FWI")])
+
+
+cor_matrix_data1
+cor_matrix_data2
+
+
+
+
+summary(new_data)
+xtabs(~Classes, data = new_data)
+
+
+
+psych <- new_data[, c("Temperature", "RH","Ws","Rain")]
+acad <- new_data[, c("FFMC", "DMC","DC","ISI","BUI","FWI")]
+
+library(ggplot2)
+library(GGally)
+library(CCA)
+ggpairs(psych)
+
+ggpairs(acad)
+
+
+
+
+####Canonical correlation
+
+cc1 <- cc(psych, acad)
+
+# display the canonical correlations
+cc1$cor
+
+
+
+# correlations
+matcor(psych, acad)
+
+# raw canonical coefficients
+cc1[3:4]
+
+
+# compute canonical loadings
+cc2 <- comput(psych, acad, cc1)
+
+# display canonical loadings
+cc2[3:6]

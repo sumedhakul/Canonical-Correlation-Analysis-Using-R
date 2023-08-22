@@ -1,0 +1,3 @@
+"0","Weather <- new_data[, c(""Temperature"", ""RH"",""Ws"",""Rain"")]"
+"0","FWI_compo <- new_data[, c(""FFMC"", ""DMC"",""DC"",""ISI"",""BUI"",""FWI"")]"
+"0","Weather"

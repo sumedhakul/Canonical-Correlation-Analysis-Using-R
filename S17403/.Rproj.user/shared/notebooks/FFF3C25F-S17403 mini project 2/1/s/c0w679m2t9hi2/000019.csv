@@ -1,0 +1,5 @@
+"0","library(ggplot2)"
+"0","library(GGally)"
+"0","library(CCA)"
+"0",""
+"0","ggpairs(Weather)"
