@@ -47,7 +47,7 @@ new_data <- new_data %>%
   mutate_at(vars(FFMC,DMC,DC,ISI,BUI,FWI), as.numeric)
 
 
-
+#extract data
 new_data <- new_data %>%
   mutate_at(vars(Temperature, RH,Ws,Rain), as.numeric)
 
@@ -155,7 +155,7 @@ cc2[3:6]
 
 #### ***In general, the number of canonical dimensions is equal to the number of variables in the smaller set; however, the number of significant dimensions may be even smaller. Canonical dimensions, also known as canonical variates, are latent variables that are analogous to factors obtained in factor analysis.***
 
-***For this particular model there are four canonical dimensions of which only the first two are statistically significant. For statistical test we use R package \"CCP\".***
+***For this particular model there are four canonical dimensions of which only the first two are statistically significant. For statistical test we use R package "CCP".***
 
 **TESTS**
 
