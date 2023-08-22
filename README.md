@@ -1,1 +1,1 @@
-# Canonical Coreelation Analysis Project
+# Canonical Corerelation Analysis Project
