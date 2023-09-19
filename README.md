@@ -1,5 +1,5 @@
 # Canonical Corerelation Analysis Project
-1. Introduction
+## 1. Introduction
 Canonical correlation analysis (CCA) is a way of measuring the linear relationship between two 
 multidimensional variables. It finds two bases, one for each variable, that are optimal with 
 respect to correlations and, at the same time, it finds the corresponding correlations. In other 
