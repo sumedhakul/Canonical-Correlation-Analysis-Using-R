@@ -11,15 +11,15 @@ variables. This is the most important difference between CCA and ordinary correl
 which highly depend on the basis in which the variables are described. CCA allows us to 
 summarize the relationship into a lesser number of statistics while preserving the main facts of 
 the relationships. CCA is a dimension-reduction technique.
-Objectives
+## 2. Objectives
 The objectives of a Canonical Correlation Analysis (CCA) project are typically focused on 
 understanding the relationship between two sets of variables and identifying the underlying 
 patterns and associations between them. Here are the main objectives of this project:
- Exploring Associations (determine if there are any significant relationships between two 
+1. Exploring Associations (determine if there are any significant relationships between two 
 sets of variables)
- Dimension Reduction
- Finding a common structure (discover the common underlying structure between the two 
+2. Dimension Reduction
+3. Finding a common structure (discover the common underlying structure between the two 
 sets of variables)
- Identifying key variables (identify which variables from each set contribute the most to 
+4. Identifying key variables (identify which variables from each set contribute the most to 
 the canonical correlations)
 
